@@ -17,9 +17,10 @@ public class Solution {
         }
         Queue<String> queue = new LinkedList<String>();
         queue.offer(start);
+        ArrayList<String> currentlevel = new ArrayList<String>(); 
         while (!queue.isEmpty()) {
         	int level = queue.size();
-        	ArrayList<String> currentlevel = new ArrayList<String>(); 
+        	currentlevel.clear();
         	for (int i = 0; i < level; i++) {
         		String top = queue.poll();
         		if (dict.contains(top)) dict.remove(top);
@@ -31,11 +32,11 @@ public class Solution {
         				char[] tmpchar = curs.toCharArray();
         				tmpchar[i] = j;
         				String tmps = new String(tmpchar);
-        				if (tmps.equals(end)) {
+        				if (!curs.equals(start) && tmps.equals(end)) {
         					map.get(end).add(curs);
         					queue.offer(tmps);
         				}
-        				if (!tmps.equals(curs) && dict.contains(tmps)) {
+        				else if (!tmps.equals(curs) && dict.contains(tmps)) {
         					if (!queue.contains(tmps)) queue.offer(tmps);
         					map.get(tmps).add(curs);
         				}
@@ -46,15 +47,15 @@ public class Solution {
         		break;
         }
         tmparray.add(end);
-        buildpath(end, map, tmparray, res);
+        buildpath(start, end, map, tmparray, res);
         return res;
     }
 	
-	public void buildpath(String end,
+	public void buildpath(String start, String end,
 			HashMap<String, ArrayList<String>> map, ArrayList<String> tmparray,
 			ArrayList<ArrayList<String>> res) {
 		ArrayList<String> pre = map.get(end);
- 		if (pre.size() == 0) {
+ 		if (end.equals(start)) {
  			ArrayList<String> tmparray2 = new ArrayList<String>(tmparray);
  			Collections.reverse(tmparray2);
  			res.add(tmparray2);
@@ -62,9 +63,10 @@ public class Solution {
  		}
  		for (String s: pre) {
  			tmparray.add(s);
- 			buildpath(s, map, tmparray, res);
+ 			buildpath(start, s, map, tmparray, res);
  			tmparray.remove(tmparray.size() - 1);
  		}
 			
 	}
+
 }
